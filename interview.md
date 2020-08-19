@@ -580,6 +580,11 @@ ES6代码输入 ==》 babylon进行解析 ==》 得到AST
 ```js
 设置border-sizing：border-box；那就会占div的宽度
 ```
-
+```js
+tcp三次
+1.客户端招手
+2.服务端点头微笑并且招手
+3.客户端点头微笑
+```
 平时会看哪些
 github、掘金、思否

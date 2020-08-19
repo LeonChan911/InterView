@@ -1,8 +1,9 @@
-function add() {
-    let a = 1;
-    const addOne = function(b) { return b + a; }
-    ++a;
-    return addOne;
+function close(){
+    let a=1;
+    const fn=(b)=>{
+        return b+a
+    }
+    a++;
+    return fn
 }
-const addOne = add()
-addOne(2)
+close()(23)
