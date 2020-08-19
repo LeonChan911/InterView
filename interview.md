@@ -371,77 +371,69 @@ class Event {
 ```
 promise 的实现
 ```js
-class MyPromise {
-  constructor (handle) {
-    if (!isFunction(handle)) {
-      throw new Error('MyPromise must accept a function as a parameter')
+function promise(fn) {
+
+    let status = 'PADDING';
+    let value = null;
+    let successQueues = [];
+    let failQueue = [];
+
+    this.then = function (onResovle) {
+        if (status === 'PADDING') {
+            successQueues.push(onResovle);
+            return this;
+        } else if (status === 'RESOLVED') {
+            onResovle(value)
+        } 
     }
-    // 添加状态
-    this._status = PENDING
-    // 添加状态
-    this._value = undefined
-    // 添加成功回调函数队列
-    this._fulfilledQueues = []
-  // 添加失败回调函数队列
-     this._rejectedQueues = []
-    // 执行handle
-    try {
-      handle(this._resolve.bind(this), this._reject.bind(this)) 
-    } catch (err) {
-      this._reject(err)
+    this.catch=function(onReject){
+        if (status === 'PADDING') {
+            failQueue.push(onReject)
+            return this;
+        } 
+        if (status === 'REJECTED') {
+            onReject(value)
+        } 
     }
-  }
-// 添加resovle时执行的函数
-_resolve (val) {
-  if (this._status !== PENDING) return
-  // 依次执行成功队列中的函数，并清空队列
-  const run = () => {
-    this._status = FULFILLED
-    this._value = val
-    let cb;
-    while (cb = this._fulfilledQueues.shift()) {
-      cb(val)
+    const resolve = (val) => {
+        setTimeout(() => {
+            status = 'RESOLVED';
+            value = val;
+            for (let item of successQueues) {
+                item(value)
+            }
+        }, 0);
+
     }
-  }
-  // 为了支持同步的Promise，这里采用异步调用
-  setTimeout(() => run(), 0)
+
+    const reject = (err) => {
+        setTimeout(() => {
+            status = 'REJECTED';
+            value = err;
+            for (let item of failQueue) {
+                item(value)
+            }
+        }, 0);
+
+    }
+    fn(resolve, reject)
 }
-// 添加reject时执行的函数
-_reject (err) { 
-  if (this._status !== PENDING) return
-  // 依次执行失败队列中的函数，并清空队列
-  const run = () => {
-    this._status = REJECTED
-    this._value = err
-    let cb;
-    while (cb = this._rejectedQueues.shift()) {
-      cb(err)
-    }
-  }
-  // 为了支持同步的Promise，这里采用异步调用
-  setTimeout(run, 0)
+function f1(num){
+    return new Promise((resolve,reject)=>{
+        // setTimeout(() => {
+        //     resolve(++num)
+        // }, 1000);
+        setTimeout(() => {
+            reject('错误')
+        }, 1000);
+    })
 }
-  // 添加then方法
-  then(onFulfilled, onRejected) {
-    const { _value, _status } = this
-    switch (_status) {
-    // 当状态为pending时，将then方法回调函数加入执行队列等待执行
-    case PENDING:
-      this._fulfilledQueues.push(onFulfilled)
-      this._rejectedQueues.push(onRejected)
-      break
-    // 当状态已经改变时，立即执行对应的回调函数
-    case FULFILLED:
-      onFulfilled(_value)
-      break
-    case REJECTED:
-      onRejected(_value)
-      break
-  }
-  // 返回一个新的Promise对象
-  return new MyPromise((onFulfilledNext, onRejectedNext) => {
-  })
-}
+f1(22).then(data=>{
+    console.log('data',data);
+}).catch((e)=>{
+    console.log('e',e);
+})
+
 ```
 ```js
 //  实现bind
