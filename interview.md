@@ -533,27 +533,22 @@ function flat(arr){
 ```js
 //算出股票最优卖出点和买入点
 let arr =[12331,23424,123213,123213,243234,543543,345435];
-const findTowMax=(arr)=>{
-  let result=[];
-  for(let i=0;i<arr.length;i++){
-      for(let j=1;j<arr.length-i;j++){
-        let lastItem=arr[i];
-        let nextItem=arr[j];
-        result.push({
-            max:nextItem-lastItem,
-            last:nextItem,
-            next:lastItem
-        })
-      }
-  }
-  console.log('result',result);
-  return result.reduce((a,b)=>{
-      if(a.max>b.max){
-        return a;
-      }else{
-        return b;
-      }
-    },{})
+const findMax = (arr) => {
+    if (arr.length === 0) {
+        return 0;
+    }
+    let maxBenifit = 0;
+    let min = arr[0]
+
+    for (let j = 0; j < arr.length; j++) {
+        if (arr[j] < min) {
+            min=arr[j]
+        } else if (arr[j] - min > maxBenifit) {
+            maxBenifit = arr[j] - min;
+            last = min;
+        }
+    }
+    return maxBenifit;
 }
 ```
 ```js
