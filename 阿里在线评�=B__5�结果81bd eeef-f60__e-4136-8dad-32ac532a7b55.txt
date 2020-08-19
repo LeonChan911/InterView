@@ -1,0 +1,141 @@
+1. 请手动实现一个简单版本的 JSON.stringify 方法
+function stringify(target: object, indent: number): string {
+  // write your code
+  let type = typeof target;
+  if (type !== "object" || type === null) {
+      if (/string|undefined|function/.test(type)) {
+        target = '"' + target + '"';
+      }
+      return String(target);
+    } else {
+      let json = [];
+      let isArr = Array.isArray(target);
+      for(let key in target){
+
+        let value =  target[key];
+        let type = typeof value;
+
+        if(/string|undefined|function/.test(type)){
+            value = '"'+value+'"';
+        }else if(type === "object"){
+            value = stringify(value)
+        }
+        json.push((isArr ? "" : '"'+ key +'":')+String(value))
+      }
+      let arrStr = "["+String(json)+"]";
+      let objStr = "{"+String(json)+"}";
+      return isArr ? arrStr : objStr
+    }
+}
+
+// testcase:
+
+
+stringify(() => void 0)
+stringify(true)
+stringify(/\w/)
+stringify(12345)
+stringify('hello world')
+stringify([1,2,3,4, { a: { value: [true, 'js', 1, null, undefined] } }])
+
+2. 实现一个 getByElementId 方法
+给定一个 document 节点，找到其子节点中符合目标 ID 的节点
+允许用递归实现
+function getByElementId(el: HTMLElement, id: strirng): HTMLElement | null {
+  // write your code
+  if(!el) return null;
+  if(el.id === id) return el;
+  for(let i=0;i<el.childNodes.length;i++){
+  	let element = getByElementId(el.childNodes[i],id);
+    if(element) return element;
+  }
+  return null;
+}
+
+3. 实现一个 requests 函数，要求可以对多个 url 进行请求，可以指定最大并发数，以及指定自定义头部
+，请从函数签名开始设计
+class Requests {
+  constructor() {
+    //指定并发数
+    this.concurrency = 0;
+    //当前并发数
+    this.currentConcurrent = 0;
+    this.requestQueue = [];
+
+  }
+  //设置并发数
+  setConcurrency(num) {
+    this.concurrency = num
+  }
+
+  requestApi(url) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('成功' + url);
+      }, 1000);
+      // const request = new XMLHttpRequest()
+      // request.open('get', url, true);
+      // request.onreadystatechange = function handleLoad() {
+      //   if (request.readyState === XMLHttpRequest.DONE) {
+      //     var status = request.status;
+      //     if (status === 0 || (status >= 200 && status < 400)) {
+      //       resolve(request.responseText);
+      //     } else {
+      //       reject('错误')
+      //     }
+      //   }
+      // }
+      // request.send();
+    });
+  }
+
+  async get(url) {
+    if (this.currentConcurrent >= this.concurrency) {
+      await this.startBlocking();
+    }
+    try {
+      this.currentConcurrent++;
+      const result = await this.requestApi(url);
+      return Promise.resolve(result);
+    } catch (err) {
+      return Promise.reject(err);
+    } finally {
+      console.log('当前并发数:', this.currentConcurrent);
+      this.currentConcurrent--;
+      this.next();
+    }
+  }
+
+  startBlocking() {
+    let _resolve;
+    let promise2 = new Promise((resolve, reject) => _resolve = resolve);
+    this.requestQueue.push(_resolve);
+    return promise2;
+  }
+  
+  next() {
+    if (this.requestQueue.length <= 0) return;
+    const _resolve = this.requestQueue.shift();
+    _resolve();
+  }
+}
+const requests = new Requests();
+requests.setConcurrency(10);
+// testcase:
+// requests.setConcurrency(2)
+
+// const ret1 = await request.get('/api/1')
+// const ret2 = await request.get('/api/2')
+// const ret3 = await request.get('/api/3')
+
+// render(ret1, ret2, ret3)
+
+// 做出的实现可以确保业务代码在接入该组件之后发生调用时符合如下调用形态
+
+
+/*
+/api/1-----------|
+/api/2---------|
+                /api/3------------|
+*/
+api/1 和 api/2 并发，api/3 pending 直到 api/2返 回后才开始请求 (i.e. 返回后，当前正在执行的并发数为 1)
