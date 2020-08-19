@@ -5,4 +5,4 @@ function add() {
     return addOne;
 }
 const addOne = add()
-addOne()
+addOne(2)
