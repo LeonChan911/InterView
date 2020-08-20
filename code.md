@@ -25,16 +25,16 @@ function throttle(fun, delay) {
 ```js
      //频繁触发,但只在特定的时间内没有触发执行条件才执行一次代码
      //函数防抖的应用场景，最常见的就是用户注册时候的手机号码验证和邮箱验证了。
-    function debounce(fun, delay) {
-        return function (args) {
-            let that = this
-            let _args = args
-            clearTimeout(fun.id)
-            fun.id = setTimeout(function () {
-                fun.call(that, _args)
-            }, delay)
+function debounce(fn, delay) { 
+     let timer;
+     return function () {
+       clearTimeout(timer)
+       timer = setTimeout( () =>{
+         fn.apply(this, arguments)
+       }, delay)
      }
-}
+   }
+
 ```
 2.描述一下 JS 的 new 操作符具体做了什么？
 ```js

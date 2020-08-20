@@ -18,3 +18,4 @@ function testFn(number){
 }
 const bd=testFn.bindFn(obj,99);
 bd()
+
