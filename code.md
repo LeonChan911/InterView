@@ -3,24 +3,19 @@
 ```js
 //频繁触发,但只在特定的时间内才执行一次代码
 //函数节流应用的实际场景，多数在监听页面元素滚动事件的时候会用到。因为滚动事件，是一个高频触发的事件。
-function throttle(fun, delay) {
-        let last, deferTimer
-            return function (args) {
-                let that = this
-                let _args = arguments
-                let now = +new Date()
-                if (last && now < last + delay) {
-                    clearTimeout(deferTimer)
-                    deferTimer = setTimeout(function () {
-                        last = now
-                        fun.apply(that, _args)
-                    }, delay)
-                }else {
-                    last = now
-                    fun.apply(that,_args)
-                }
+function throttle(fn,delay){
+    let canRun =true;
+    return function () {
+        if(!canRun){
+            return
         }
+        canRun =false;
+        setTimeout(() => {
+            fn.apply(this,arguments)
+            canRun =true;
+        }, delay);
     }
+}
 ```
 ```js
      //频繁触发,但只在特定的时间内没有触发执行条件才执行一次代码
