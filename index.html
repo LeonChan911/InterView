@@ -2,97 +2,62 @@
 
 <head>
     <style>
-        .slide {
+        .banner {
+            width: 500px;
+            height: 300px;
+            border: 1px solid red;
+            margin: 0 auto;
             position: relative;
-            margin: auto;
-            width: 600px;
-            height: 200px;
-            text-align: center;
-            font-family: Arial;
-            color: #FFF;
             overflow: hidden;
         }
 
-        .slide ul {
-            margin: 10px 0;
-            padding: 0;
-            width: 9999999px;
-            /* transition: all 0.5s; */
+        .long {
+            width: 2500px;
+            font-size: 0;
+            position: absolute;
+            left: 0;
+            animation: banner 10s infinite;
         }
 
-        /*//自动播放*/
-        .slide .slide-auto {
-            animation: marginLeft 10.5s infinite;
-        }
+        @keyframes banner {
 
-        .slide li {
-            float: left;
-            width: 600px;
-            height: 200px;
-            /* list-style: none; */
-            line-height: 200px;
-            font-size: 36px;
-        }
-
-        .slide li:nth-child(1) {
-            background: #9fa8ef;
-        }
-
-        .slide li:nth-child(2) {
-            background: #ef9fb1;
-        }
-
-        .slide li:nth-child(3) {
-            background: #9fefc3;
-        }
-
-        @keyframes marginLeft {
-            0% {
-                margin-left: 0;
+            0%,
+            15% {
+                left: 0;
             }
 
-            28.5% {
-                margin-left: 0;
+            25%,
+            40% {
+                left: -500px;
             }
 
-            33.3% {
-                margin-left: -600px;
+            50%,
+            65% {
+                left: -1000px;
             }
 
-            62% {
-                margin-left: -600px;
-            }
-
-            66.7% {
-                margin-left: -1200px;
-            }
-
-            95.2% {
-                margin-left: -1200px;
+            75%,
+            90% {
+                left: -1500px;
             }
 
             100% {
-                margin-left: 0;
+                left: -2000px;
             }
-        }
-        .trans{
-                width: 0px;
-                height: 0px;
-                border: 40px solid;
-                border-color: transparent transparent orange;
         }
     </style>
 </head>
 
 <body>
-    <div class="slide">
-        <ul class="slide-auto">
-            <li>one</li>
-            <li>two</li>
-            <li>three</li>
-        </ul>
+    <div class="banner">
+        <div class="long">
+            <img src="http://www.jq22.com/img/cs/500x300a.png">
+            <img src="http://www.jq22.com/img/cs/500x300b.png">
+            <img src="http://www.jq22.com/img/cs/500x300c.png">
+            <img src="http://www.jq22.com/img/cs/500x300d.png">
+            <img src="http://www.jq22.com/img/cs/500x300.png">
+        </div>
     </div>
-    <div class="trans"></div>
 </body>
 
 </html>
