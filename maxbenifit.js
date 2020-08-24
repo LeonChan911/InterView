@@ -7,7 +7,7 @@ function maxBenifit(arr){
             if(element<min){
                 min=element
             }else if(element-min> maxBenefit){
-                maxBenefit=element
+                maxBenefit=element-min
             }
     });
     return maxBenefit
